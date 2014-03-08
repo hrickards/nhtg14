@@ -19,14 +19,15 @@ class FoodStandards
     options = {
       headers: HEADERS,
       query: {
-        name: 'costa',
-        pageSize: '2'
+        latitude: @latitude,
+        longitude: @longitude
       }
     }
     results = self.class.get(endpoint, options)
     raise "No results".inspect unless results.include? "establishments"
     @establishments = results["establishments"]
     raise "No results".inspect if results.empty?
+    puts @establishments.first.inspect if $DEBUG_API
   end
 
   def score

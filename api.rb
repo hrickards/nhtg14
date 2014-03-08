@@ -3,6 +3,8 @@ require 'grape'
 
 require './food_standards.rb'
 
+$DEBUG_API = true
+
 class Api < Grape::API
   format :json
 

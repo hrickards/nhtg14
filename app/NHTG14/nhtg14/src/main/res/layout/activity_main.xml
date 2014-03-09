@@ -5,15 +5,8 @@
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:paddingTop="10dp"
+    android:animateLayoutChanges="true"
     >
-
-    <fragment
-        android:name="com.harryrickards.nhtg14.SearchFragment"
-        android:id="@+id/searchFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:layout="@layout/fragment_search"
-    />
 
     <fragment
         android:name="com.harryrickards.nhtg14.ResultsFragment"
@@ -22,4 +15,12 @@
         android:layout_height="wrap_content"
         tools:layout="@layout/fragment_results"
     />
+
+    <fragment
+        android:name="com.harryrickards.nhtg14.SearchFragment"
+        android:id="@+id/searchFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/fragment_search"
+        />
 </LinearLayout>

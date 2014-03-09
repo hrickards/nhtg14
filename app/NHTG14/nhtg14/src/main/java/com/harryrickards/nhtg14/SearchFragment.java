@@ -35,6 +35,11 @@ public class SearchFragment  extends Fragment {
         });
     }
 
+    // Update button text to "search again"
+    public void updateButtonText() {
+        searchButton.setText(getString(R.string.search_again));
+    }
+
     public void onSearchStarted() {
         searchButton.setEnabled(false);
     }

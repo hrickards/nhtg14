@@ -22,4 +22,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     compile files('android-async-http-1.4.4.jar')
     compile files('commons-collections-3.2.1.jar')
+    compile project(':libs/UrlImageViewHelper')
 }

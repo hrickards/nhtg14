@@ -16,7 +16,11 @@ import org.json.JSONObject;
  */
 public class Establishment {
     public String establishmentName;
-    public Integer rating;
+    public int rating;
+    public String photoUrl;
+    public int hygieneRating;
+    public int structuralRating;
+    public int managementRating;
 
     protected Context mContext;
     protected EstablishmentInterface mCallback;
@@ -56,13 +60,21 @@ public class Establishment {
         });
     }
 
+    // Get data out of the JSON response
     protected void parseData(JSONObject data) throws JSONException {
         establishmentName = data.getString("name");
         rating = data.getInt("score");
-    }
 
-    // Getter methods
-    protected String getRatingString() {
-        return Integer.toString(rating) + mContext.getString(R.string.rating_suffix);
+        JSONObject scores = data.getJSONObject("scores");
+        hygieneRating = scores.getInt("hygiene");
+        structuralRating = scores.getInt("structural");
+        managementRating = scores.getInt("confidence_in_management");
+
+        JSONArray photos = data.getJSONArray("photos");
+        if (photos.length() > 0) {
+            photoUrl = photos.getString(0);
+        } else {
+            photoUrl = null;
+        }
     }
 }

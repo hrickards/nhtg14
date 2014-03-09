@@ -24,7 +24,7 @@ public class APIClient {
     private static AsyncHttpClient client = new AsyncHttpClient();
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.setTimeout(10);
+        client.setTimeout(30);
         client.get(BASE_URL + url, params, responseHandler);
     }
 }

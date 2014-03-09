@@ -3,17 +3,23 @@ package com.harryrickards.nhtg14;
 import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 public class MainActivity extends Activity
         implements MotionDetector.MotionDetectorInterface,
-        Establishment.EstablishmentInterface {
+        Establishment.EstablishmentInterface,
+        SearchFragment.OnSearchListener {
 
+    // Fragments
+    private SearchFragment searchFragment;
+    private ResultsFragment resultsFragment;
+
+    // Detectors
     private MotionDetector motionDetector;
     private LocationDetector locationDetector;
+
+    // For getting establishment details
     private Establishment establishment;
     private boolean gettingEstablishmentDetails = false;
 
@@ -22,19 +28,24 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Get fragments
+        searchFragment = (SearchFragment) getFragmentManager().findFragmentById(R.id.searchFragment);
+        resultsFragment = (ResultsFragment) getFragmentManager().findFragmentById(R.id.resultsFragment);
+
+        // Set up detectors
         motionDetector = new MotionDetector(this);
         locationDetector = new LocationDetector(this);
     }
 
-    public void onUserStopped() {
-        onEstablishmentSearchRequested();
-    }
+    // Search initialisation
+    public void onUserStopped() { onEstablishmentSearchRequested(); }
+    public void onManualSearch() { onEstablishmentSearchRequested(); }
 
 
+    // Begin a search
     public void onEstablishmentSearchRequested() {
+        // Get most recent location
         Location location = locationDetector.getLocation();
-        Toast.makeText(this, "Hmm...", Toast.LENGTH_SHORT).show();
-
 
         if (!gettingEstablishmentDetails && location != null) {
             getEstablishmentDetails(location);
@@ -43,7 +54,7 @@ public class MainActivity extends Activity
 
     protected void getEstablishmentDetails(Location location) {
         gettingEstablishmentDetails = true;
-        //TODO fragment.onSearchStarted();
+        if (searchFragment != null) { searchFragment.onSearchStarted(); }
 
         // Get establishment details
         establishment = new Establishment(location, this);
@@ -51,10 +62,10 @@ public class MainActivity extends Activity
 
     public void onEstablishmentDetailsFound() {
         gettingEstablishmentDetails = false;
-        // TODO fragment.onSearchStopped();
+        if (searchFragment != null) { searchFragment.onSearchStopped(); }
 
-        // TODO Something with establishment
-        Toast.makeText(this, establishment.establishmentName, Toast.LENGTH_SHORT).show();
+        // Show results to user
+        if (resultsFragment != null) { resultsFragment.showEstablishment(establishment); }
     }
 
     // Default menu stuff

@@ -11,7 +11,8 @@ import android.util.Log;
  * Keep track of current location using GPS.
  */
 public class LocationDetector implements  LocationListener {
-    private static final int TWO_MINUTES = 1000 * 60 * 2;
+    private static final int MAX_TIME = 1000 * 15;
+    private static final int ACCURACY_DELTA = 50;
     private Location mLocation;
     private Context mContext;
 
@@ -61,8 +62,8 @@ public class LocationDetector implements  LocationListener {
 
         // Check whether the new location fix is newer or older
         long timeDelta = location.getTime() - currentBestLocation.getTime();
-        boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
-        boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
+        boolean isSignificantlyNewer = timeDelta > MAX_TIME;
+        boolean isSignificantlyOlder = timeDelta < -MAX_TIME;
         boolean isNewer = timeDelta > 0;
 
         // If it's been more than two minutes since the current location, use the new location
@@ -78,7 +79,7 @@ public class LocationDetector implements  LocationListener {
         int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
         boolean isLessAccurate = accuracyDelta > 0;
         boolean isMoreAccurate = accuracyDelta < 0;
-        boolean isSignificantlyLessAccurate = accuracyDelta > 50;
+        boolean isSignificantlyLessAccurate = accuracyDelta > ACCURACY_DELTA;
 
         // Check if the old and new location are from the same provider
         boolean isFromSameProvider = isSameProvider(location.getProvider(),

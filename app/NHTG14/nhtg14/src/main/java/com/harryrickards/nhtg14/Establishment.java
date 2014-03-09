@@ -60,4 +60,9 @@ public class Establishment {
         establishmentName = data.getString("name");
         rating = data.getDouble("score");
     }
+
+    // Getter methods
+    protected String getRating() {
+        return Double.toString(rating) + mContext.getString(R.string.rating_suffix);
+    }
 }

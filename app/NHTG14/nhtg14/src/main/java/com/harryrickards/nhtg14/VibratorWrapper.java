@@ -26,11 +26,11 @@ public class VibratorWrapper {
                 pattern[i] *= STAR_WARS_SCALE_FACTOR;
             }
         } else {
-            pattern = new long[rating*2];
+            pattern = new long[rating*2+1];
 
             for (int i = 0; i < rating; i++) {
-                pattern[2*i] = VIBRATE_ON_TIME;
-                pattern[2*i+1] = VIBRATE_OFF_TIME;
+                pattern[2*i+1] = VIBRATE_ON_TIME;
+                pattern[2*i+2] = VIBRATE_OFF_TIME;
             }
         }
 

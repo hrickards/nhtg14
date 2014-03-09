@@ -3,6 +3,7 @@ package com.harryrickards.nhtg14;
 import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 
 public class MainActivity extends Activity
@@ -55,6 +56,7 @@ public class MainActivity extends Activity
     }
 
     protected void getEstablishmentDetails(Location location) {
+        Log.w("nhtg14", "getEstablishmentDetails");
         gettingEstablishmentDetails = true;
         if (searchFragment != null) { searchFragment.onSearchStarted(); }
 

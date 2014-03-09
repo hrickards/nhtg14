@@ -1,5 +1,6 @@
 require 'bundler'
 require 'grape'
+require 'google-search'
 
 require 'cache_method'
 require 'redis'
@@ -40,7 +41,11 @@ class Api < Grape::API
     
       gp = $google_places.search(fs.location[:latitude], fs.location[:longitude], fs.name)
       if gp.nil?
-        gp_hash = {}
+        photo = Google::Search::Image.new(:query => "\"#{fs.name}\" logo").first
+        photo = Google::Search::Image.new(:query => "#{fs.name} logo").first if photo.nil?
+        gp_hash = {
+          photos: [photo.uri]
+        }
       else
         gp_hash = {
           types: gp.types,

@@ -19,6 +19,8 @@ GEM
       descendants_tracker (~> 0.0.1)
     descendants_tracker (0.0.3)
     equalizer (0.0.9)
+    google-search (1.0.3)
+      json
     google_places (0.20.0)
       httparty
     grape (0.6.1)
@@ -61,6 +63,7 @@ PLATFORMS
 
 DEPENDENCIES
   cache_method
+  google-search
   google_places
   grape
   httparty

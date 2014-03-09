@@ -46,6 +46,7 @@ class FoodStandards
     raise "No results".inspect if results.empty?
     puts @establishments.first.inspect if $DEBUG_API
   end
+  cache_method :search
 
   def score
     @establishments.first["RatingValue"].to_i
@@ -70,7 +71,7 @@ class FoodStandards
 
   def location
     geocode = @establishments.first["geocode"].map do |k, v|
-      [k, v.to_f]
+      [k.underscore.to_sym, v.to_f]
     end
     Hash[geocode]
   end

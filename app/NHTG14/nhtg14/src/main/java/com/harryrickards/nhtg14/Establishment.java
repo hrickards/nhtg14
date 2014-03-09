@@ -16,7 +16,7 @@ import org.json.JSONObject;
  */
 public class Establishment {
     public String establishmentName;
-    public Double rating;
+    public Integer rating;
 
     protected Context mContext;
     protected EstablishmentInterface mCallback;
@@ -58,11 +58,11 @@ public class Establishment {
 
     protected void parseData(JSONObject data) throws JSONException {
         establishmentName = data.getString("name");
-        rating = data.getDouble("score");
+        rating = data.getInt("score");
     }
 
     // Getter methods
     protected String getRatingString() {
-        return Double.toString(rating) + mContext.getString(R.string.rating_suffix);
+        return Integer.toString(rating) + mContext.getString(R.string.rating_suffix);
     }
 }

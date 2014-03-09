@@ -68,6 +68,13 @@ class FoodStandards
     (@establishments.first["Distance"].to_f * METRES_IN_A_MILE).to_i
   end
 
+  def location
+    geocode = @establishments.first["geocode"].map do |k, v|
+      [k, v.to_f]
+    end
+    Hash[geocode]
+  end
+
   def self.score(params)
     fs = FoodStandards.new params
     fs.score

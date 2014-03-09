@@ -24,7 +24,8 @@ class Api < Grape::API
         score: fs.score,
         name: fs.name,
         scores: fs.scores,
-        distance: fs.distance
+        distance: fs.distance,
+        location: fs.location
       }
     end
   end

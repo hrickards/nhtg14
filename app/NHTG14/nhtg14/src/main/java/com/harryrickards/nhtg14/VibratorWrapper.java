@@ -35,6 +35,7 @@ public class VibratorWrapper {
         }
 
         Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.cancel(); // Cancel any previous vibrations
         vibrator.vibrate(pattern, -1);
     }
 

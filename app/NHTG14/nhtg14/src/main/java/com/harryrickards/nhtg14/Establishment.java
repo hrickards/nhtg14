@@ -62,7 +62,7 @@ public class Establishment {
     }
 
     // Getter methods
-    protected String getRating() {
+    protected String getRatingString() {
         return Double.toString(rating) + mContext.getString(R.string.rating_suffix);
     }
 }

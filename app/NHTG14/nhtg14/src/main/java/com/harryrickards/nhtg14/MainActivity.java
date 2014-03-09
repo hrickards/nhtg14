@@ -66,6 +66,9 @@ public class MainActivity extends Activity
 
         // Show results to user
         if (resultsFragment != null) { resultsFragment.showEstablishment(establishment); }
+
+        // Vibrate based on rating
+        VibratorWrapper.vibrateEstablishment(this, establishment);
     }
 
     // Default menu stuff

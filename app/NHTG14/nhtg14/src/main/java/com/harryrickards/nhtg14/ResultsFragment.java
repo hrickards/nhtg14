@@ -28,6 +28,6 @@ public class ResultsFragment extends Fragment {
 
     public void showEstablishment(Establishment establishment) {
         establishmentName.setText(establishment.establishmentName);
-        establishmentRating.setText(establishment.getRating());
+        establishmentRating.setText(establishment.getRatingString());
     }
 }

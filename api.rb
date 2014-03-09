@@ -23,10 +23,11 @@ class Api < Grape::API
       optional :lng, type: String, desc: "Longitude"
     end
     get do
-      puts params.inspect
+      puts params.inspect if $DEBUG_API
       return {} if params[:lat].nil? or params[:lng].nil?
 
       fs = FoodStandards.new({lat:params[:lat], lng: params[:lng]})
+      return {} if fs.establishments.nil? or fs.establishments.empty?
       fs_hash = {
         score: fs.score,
         name: fs.name,
@@ -35,7 +36,7 @@ class Api < Grape::API
         location: fs.location
       }
 
-      puts "got fsa data"
+      puts "got fsa data" if $DEBUG_API
     
       gp = $google_places.search(fs.location[:latitude], fs.location[:longitude], fs.name)
       if gp.nil?
@@ -44,9 +45,11 @@ class Api < Grape::API
         gp_hash = {
           types: gp.types,
           reviews: gp.reviews,
-          photos: gp.photos
+          photos: $google_places.parse_photos(gp.photos)
         }
       end
+
+      puts gp.inspect if $DEBUG_API
 
       fs_hash.merge gp_hash
     end

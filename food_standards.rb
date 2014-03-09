@@ -22,6 +22,8 @@ class FoodStandards
     'x-api-version' => '2'
   }
 
+  attr_accessor :establishments
+
   def initialize(params)
     @latitude = params[:lat]
     @longitude = params[:lng]
@@ -41,22 +43,28 @@ class FoodStandards
       }
     }
     results = self.class.get(endpoint, options)
-    raise "No results".inspect unless results.include? "establishments"
+    unless results.include? "establishments" and not results["establishments"].empty? and not results["establishments"].first.nil?
+      @establishments = []
+      return []
+    end
+
     @establishments = results["establishments"]
-    raise "No results".inspect if results.empty?
     puts @establishments.first.inspect if $DEBUG_API
   end
   cache_method :search
 
   def score
+    return "" if @establishments.empty?
     @establishments.first["RatingValue"].to_i
   end
 
   def name
+    return "" if @establishments.empty?
     @establishments.first["BusinessName"]
   end
 
   def scores
+    return "" if @establishments.empty?
     data = @establishments.first["scores"].map do |k, v|
       [k.underscore.to_sym, v]
     end
@@ -66,10 +74,12 @@ class FoodStandards
   # In metres
   # Returned from FSA in miles
   def distance
+    return "" if @establishments.empty?
     (@establishments.first["Distance"].to_f * METRES_IN_A_MILE).to_i
   end
 
   def location
+    return "" if @establishments.empty?
     geocode = @establishments.first["geocode"].map do |k, v|
       [k.underscore.to_sym, v.to_f]
     end

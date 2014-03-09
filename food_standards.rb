@@ -12,6 +12,7 @@ class FoodStandards
   def initialize(params)
     @latitude = params[:lat]
     @longitude = params[:lng]
+    self.search
   end
 
   def search
@@ -20,7 +21,10 @@ class FoodStandards
       headers: HEADERS,
       query: {
         latitude: @latitude,
-        longitude: @longitude
+        longitude: @longitude,
+        sortOptionKey: 'distance',
+        maxDistanceLimit: 0.1,
+        pageSize: 1
       }
     }
     results = self.class.get(endpoint, options)
@@ -34,9 +38,12 @@ class FoodStandards
     @establishments.first["RatingValue"].to_i
   end
 
+  def name
+    @establishments.first["BusinessName"]
+  end
+
   def self.score(params)
     fs = FoodStandards.new params
-    fs.search
     fs.score
   end
 end

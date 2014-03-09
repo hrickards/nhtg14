@@ -5,10 +5,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 
-import org.apache.commons.collections.buffer.CircularFifoBuffer;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 /**
@@ -18,12 +17,12 @@ public class MotionDetector implements SensorEventListener {
     private Context mContext;
     private MotionDetectorInterface mCallback;
 
-    private CircularFifoBuffer gValues = new CircularFifoBuffer(50);
-    private SensorManager sensorManager;
-    private int accelerometerCounter = 0;
+    private ArrayList<Float> gValues = new ArrayList<Float>();
 
-    private static final int ACCELEROMETER_LIMIT = 5;
+    private SensorManager sensorManager;
     private static final float ACCELEROMETER_THRESHOLD = 1; // Range
+    private static final float NEEDED_TIME_DELTA = 1*1000000000; // Time to take measurements for in ns
+    private long accelerometerTime = System.nanoTime();
 
     private static final int MOTION_STATE = 0;
     private static final int STATIONARY_STATE = 1;
@@ -37,7 +36,7 @@ public class MotionDetector implements SensorEventListener {
         sensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
         sensorManager.registerListener(this,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_NORMAL);
+                SensorManager.SENSOR_DELAY_GAME);
     }
 
     public interface MotionDetectorInterface {
@@ -56,7 +55,6 @@ public class MotionDetector implements SensorEventListener {
     }
 
     protected void onAccelerometerValueFound(SensorEvent event) {
-        accelerometerCounter += 1;
         float[] values = event.values;
 
         float x = values[0];
@@ -66,11 +64,13 @@ public class MotionDetector implements SensorEventListener {
         float g = (x * x + y * y + z * z) / (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH);
         gValues.add(g);
 
-        if (accelerometerCounter == ACCELEROMETER_LIMIT) {
-            // Find range
-            accelerometerCounter = 0;
+        // If we've been sampling for long enough
+        long currentTime = System.nanoTime();
+        long timeDelta = currentTime - accelerometerTime;
+        if (timeDelta > NEEDED_TIME_DELTA) {
             float range = (Float) Collections.max(gValues) - (Float) Collections.min(gValues);
 
+            // New state to switch to
             int newState;
             if (range > ACCELEROMETER_THRESHOLD) {
                 newState = MOTION_STATE;
@@ -78,13 +78,14 @@ public class MotionDetector implements SensorEventListener {
                 newState = STATIONARY_STATE;
             }
 
-            // Log.w("nhtg14", "going from " + Integer.toString(mState) + " to " + Integer.toString(newState));
-
+            // If user has stopped
             if (mState == MOTION_STATE && newState == STATIONARY_STATE) {
                 mCallback.onUserStopped();
             }
 
             mState = newState;
+            gValues.clear();
+            accelerometerTime = currentTime;
         }
     }
 }

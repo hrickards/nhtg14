@@ -22,7 +22,9 @@ class Api < Grape::API
       fs = FoodStandards.new({lat:params[:lat], lng: params[:lng]})
       {
         score: fs.score,
-        name: fs.name
+        name: fs.name,
+        scores: fs.scores,
+        distance: fs.distance
       }
     end
   end

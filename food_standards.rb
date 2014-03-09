@@ -1,6 +1,19 @@
 require 'bundler'
 require 'httparty'
 
+METRES_IN_A_MILE = 1609.34
+
+# From ActiveSupport
+class String
+  def underscore
+    self.gsub(/::/, '/').
+    gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+    gsub(/([a-z\d])([A-Z])/,'\1_\2').
+    tr("-", "_").
+    downcase
+  end
+end
+
 class FoodStandards
   include HTTParty
 
@@ -40,6 +53,19 @@ class FoodStandards
 
   def name
     @establishments.first["BusinessName"]
+  end
+
+  def scores
+    data = @establishments.first["scores"].map do |k, v|
+      [k.underscore.to_sym, v]
+    end
+    Hash[data]
+  end
+
+  # In metres
+  # Returned from FSA in miles
+  def distance
+    (@establishments.first["Distance"].to_f * METRES_IN_A_MILE).to_i
   end
 
   def self.score(params)

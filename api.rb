@@ -7,16 +7,22 @@ $DEBUG_API = true
 
 class Api < Grape::API
   format :json
+  prefix "api"
 
-  resource :establishments do
+  resource :ratings do
     desc "Get score for an establishment with a certain lat and lng."
     params do
-      requires :lat, type: String, desc: "Latitude"
-      requires :lng, type: String, desc: "Longitude"
+      optional :lat, type: String, desc: "Latitude"
+      optional :lng, type: String, desc: "Longitude"
     end
     get do
+      puts params.inspect
+      return {} if params[:lat].nil? or params[:lng].nil?
+
+      fs = FoodStandards.new({lat:params[:lat], lng: params[:lng]})
       {
-        score: FoodStandards.score({lat:params[:lat], lng: params[:lng]})
+        score: fs.score,
+        name: fs.name
       }
     end
   end

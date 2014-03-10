@@ -127,12 +127,13 @@
         android:layout_width="150dp"
         android:layout_alignBottom="@id/reviewLabel"
         android:layout_height="30dp"
+        android:id="@+id/reviewRating"
     />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/reviewLabel"
-        android:id="@+id/reviews"
+        android:id="@+id/reviewText"
         android:layout_marginTop="10dp"
         android:layout_alignEnd="@id/picture"
         android:layout_alignLeft="@id/picture"

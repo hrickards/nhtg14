@@ -12,5 +12,6 @@
     <string name="structural_label">Structural rating:</string>
     <string name="management_label">Management rating:</string>
     <string name="review_label">Review:</string>
+    <string name="error_getting_details">Sorry, an error occurred when getting those details.</string>
 
 </resources>

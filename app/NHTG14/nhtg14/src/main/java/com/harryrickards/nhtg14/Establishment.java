@@ -21,6 +21,8 @@ public class Establishment {
     public int hygieneRating;
     public int structuralRating;
     public int managementRating;
+    public String reviewText;
+    public int reviewRating;
 
     protected Context mContext;
     protected EstablishmentInterface mCallback;
@@ -34,6 +36,7 @@ public class Establishment {
 
     public interface EstablishmentInterface {
         public void onEstablishmentDetailsFound();
+        public void onEstablishmentDetailsError();
     }
 
     protected void getDetails(Location location) {
@@ -50,12 +53,14 @@ public class Establishment {
                     mCallback.onEstablishmentDetailsFound();
                 } catch (JSONException e) {
                     Log.w("nhtg14", "failed" + e.getMessage());
+                    mCallback.onEstablishmentDetailsError();
                 }
             }
 
             @Override
             public void onFailure(int statusCode, org.apache.http.Header[] headers, java.lang.String responseBody, java.lang.Throwable error) {
                 Log.w("nhtg14", "failed" + error.getMessage());
+                mCallback.onEstablishmentDetailsError();
             }
         });
     }
@@ -75,6 +80,16 @@ public class Establishment {
             photoUrl = photos.getString(0);
         } else {
             photoUrl = null;
+        }
+
+        JSONArray reviews = data.getJSONArray("reviews");
+        if (reviews.length() > 0) {
+            JSONObject review = reviews.getJSONObject(0);
+            reviewText = review.getString("text");
+            reviewRating = review.getInt("rating");
+        } else {
+            reviewText = null;
+            reviewRating = 0;
         }
     }
 }

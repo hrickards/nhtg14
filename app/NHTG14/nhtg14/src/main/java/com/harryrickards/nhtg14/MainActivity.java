@@ -1,10 +1,13 @@
 package com.harryrickards.nhtg14;
 
 import android.app.Activity;
+import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.Toast;
 
 public class MainActivity extends Activity
         implements MotionDetector.MotionDetectorInterface,
@@ -38,6 +41,11 @@ public class MainActivity extends Activity
         // Set up detectors
         motionDetector = new MotionDetector(this);
         locationDetector = new LocationDetector(this);
+
+        PowerManager mgr = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+        PowerManager.WakeLock wakeLock = mgr.newWakeLock(PowerManager.FULL_WAKE_LOCK, "NHTGWakeLock");
+        wakeLock.acquire();
+        // TODO After x minutes, wakeLock.release()
     }
 
     // Search initialisation
@@ -64,17 +72,24 @@ public class MainActivity extends Activity
         establishment = new Establishment(location, this);
     }
 
+    public void onEstablishmentDetailsError() {
+        gettingEstablishmentDetails = false;
+        if (searchFragment != null) { searchFragment.onSearchStopped(); }
+
+        Toast.makeText(this, getString(R.string.error_getting_details), Toast.LENGTH_SHORT).show();
+    }
+
     public void onEstablishmentDetailsFound() {
         gettingEstablishmentDetails = false;
         if (searchFragment != null) { searchFragment.onSearchStopped(); }
+
+        // Show results to user
+        if (resultsFragment != null) { resultsFragment.showEstablishment(establishment); }
 
         // Make sure resultsFragment is shown
         getFragmentManager().beginTransaction().show(resultsFragment).commit();
         // Change search button to "search again"
         searchFragment.updateButtonText();
-
-        // Show results to user
-        if (resultsFragment != null) { resultsFragment.showEstablishment(establishment); }
 
         // Vibrate based on rating
         VibratorWrapper.vibrateEstablishment(this, establishment);

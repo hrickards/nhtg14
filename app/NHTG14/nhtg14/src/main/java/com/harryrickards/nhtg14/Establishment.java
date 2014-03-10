@@ -16,7 +16,13 @@ import org.json.JSONObject;
  */
 public class Establishment {
     public String establishmentName;
-    public Integer rating;
+    public int rating;
+    public String photoUrl;
+    public int hygieneRating;
+    public int structuralRating;
+    public int managementRating;
+    public String reviewText;
+    public int reviewRating;
 
     protected Context mContext;
     protected EstablishmentInterface mCallback;
@@ -30,6 +36,7 @@ public class Establishment {
 
     public interface EstablishmentInterface {
         public void onEstablishmentDetailsFound();
+        public void onEstablishmentDetailsError();
     }
 
     protected void getDetails(Location location) {
@@ -46,23 +53,43 @@ public class Establishment {
                     mCallback.onEstablishmentDetailsFound();
                 } catch (JSONException e) {
                     Log.w("nhtg14", "failed" + e.getMessage());
+                    mCallback.onEstablishmentDetailsError();
                 }
             }
 
             @Override
             public void onFailure(int statusCode, org.apache.http.Header[] headers, java.lang.String responseBody, java.lang.Throwable error) {
                 Log.w("nhtg14", "failed" + error.getMessage());
+                mCallback.onEstablishmentDetailsError();
             }
         });
     }
 
+    // Get data out of the JSON response
     protected void parseData(JSONObject data) throws JSONException {
         establishmentName = data.getString("name");
         rating = data.getInt("score");
-    }
 
-    // Getter methods
-    protected String getRatingString() {
-        return Integer.toString(rating) + mContext.getString(R.string.rating_suffix);
+        JSONObject scores = data.getJSONObject("scores");
+        hygieneRating = scores.getInt("hygiene");
+        structuralRating = scores.getInt("structural");
+        managementRating = scores.getInt("confidence_in_management");
+
+        JSONArray photos = data.getJSONArray("photos");
+        if (photos.length() > 0) {
+            photoUrl = photos.getString(0);
+        } else {
+            photoUrl = null;
+        }
+
+        JSONArray reviews = data.getJSONArray("reviews");
+        if (reviews.length() > 0) {
+            JSONObject review = reviews.getJSONObject(0);
+            reviewText = review.getString("text");
+            reviewRating = review.getInt("rating");
+        } else {
+            reviewText = null;
+            reviewRating = 0;
+        }
     }
 }

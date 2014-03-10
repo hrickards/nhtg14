@@ -14,7 +14,7 @@ public class VibratorWrapper {
     // https://github.com/o2Labs/handshake-html5-vibrate-haptic-library/blob/master/handshake.js
     // 0 at the start as native vibration has a delay before the vibration starts
     final static long[] STAR_WARS_PATTERN = new long[] {0,500,110,500,110,450,110,200,110,170,40,450,110,200,110,170,40,500};
-    final static double STAR_WARS_SCALE_FACTOR = 1.5; // Their pattern's too fast
+    final static double STAR_WARS_SCALE_FACTOR = 1.2; // Their pattern's too fast
 
     public static void vibrate(Context context, int rating) {
         long[] pattern;
@@ -26,19 +26,20 @@ public class VibratorWrapper {
                 pattern[i] *= STAR_WARS_SCALE_FACTOR;
             }
         } else {
-            pattern = new long[rating*2];
+            pattern = new long[rating*2+1];
 
             for (int i = 0; i < rating; i++) {
-                pattern[2*i] = VIBRATE_ON_TIME;
-                pattern[2*i+1] = VIBRATE_OFF_TIME;
+                pattern[2*i+1] = VIBRATE_ON_TIME;
+                pattern[2*i+2] = VIBRATE_OFF_TIME;
             }
         }
 
         Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.cancel(); // Cancel any previous vibrations
         vibrator.vibrate(pattern, -1);
     }
 
     public static void vibrateEstablishment(Context context, Establishment establishment) {
-        vibrate(context, establishment.rating.intValue());
+        vibrate(context, establishment.rating);
     }
 }

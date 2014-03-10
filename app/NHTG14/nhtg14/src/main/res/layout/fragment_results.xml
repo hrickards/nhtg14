@@ -1,23 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dip"
+    android:animateLayoutChanges="true"
 >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/establishmentName"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/name"
+        android:textSize="18sp"
     />
 
+    <ImageView
+        android:contentDescription="@string/image_description"
+        android:id="@+id/picture"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:minWidth="300dp"
+        android:layout_below="@id/name"
+    />
+
+    <!-- Overall rating -->
+    <TextView
+        android:layout_below="@+id/picture"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/picture"
+        android:text="@string/overall_fhr_label"
+        android:id="@+id/overallFhrLabel"
+        android:layout_marginTop="15dp"
+    />
+    <ImageView
+        android:layout_gravity="center"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:layout_alignBottom="@id/overallFhrLabel"
+        android:layout_centerHorizontal="true"
+        android:layout_alignEnd="@id/picture"
+        android:id="@+id/overallRating"
+    />
+
+    <!-- Hygiene rating -->
+    <TextView
+        android:layout_below="@+id/overallFhrLabel"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/picture"
+        android:text="@string/hygiene_label"
+        android:id="@+id/hygieneLabel"
+    />
+    <ImageView
+        android:layout_gravity="center"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:layout_alignBottom="@id/hygieneLabel"
+        android:layout_centerHorizontal="true"
+        android:layout_alignEnd="@id/picture"
+        android:id="@+id/hygieneRating"
+    />
+
+    <!-- Structural rating -->
+    <TextView
+        android:layout_below="@+id/hygieneLabel"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/picture"
+        android:text="@string/structural_label"
+        android:id="@+id/structuralLabel"
+    />
+    <ImageView
+        android:layout_gravity="center"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:layout_alignBottom="@id/structuralLabel"
+        android:layout_centerHorizontal="true"
+        android:layout_alignEnd="@id/picture"
+        android:id="@+id/structuralRating"
+    />
+
+    <!-- Management rating -->
+    <TextView
+        android:layout_below="@+id/structuralLabel"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/picture"
+        android:text="@string/management_label"
+        android:id="@+id/managementLabel"
+    />
+    <ImageView
+        android:layout_gravity="center"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:layout_alignBottom="@id/managementLabel"
+        android:layout_centerHorizontal="true"
+        android:layout_alignEnd="@id/picture"
+        android:id="@+id/managementRating"
+    />
+
+    <!-- Reviews -->
+    <TextView
+        android:layout_alignLeft="@id/picture"
+        android:layout_below="@id/managementLabel"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:id="@+id/reviewLabel"
+        android:text="@string/review_label"
+    />
+    <ImageView
+        android:layout_alignEnd="@+id/picture"
+        android:layout_width="150dp"
+        android:layout_alignBottom="@id/reviewLabel"
+        android:layout_height="30dp"
+        android:id="@+id/reviewRating"
+    />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/establishmentRating"
+        android:layout_below="@id/reviewLabel"
+        android:id="@+id/reviewText"
+        android:layout_marginTop="10dp"
+        android:layout_alignEnd="@id/picture"
+        android:layout_alignLeft="@id/picture"
+        android:text=""
     />
-
-</LinearLayout>
+</RelativeLayout>

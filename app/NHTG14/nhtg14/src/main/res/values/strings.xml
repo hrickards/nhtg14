@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">NHTG14</string>
+    <string name="app_name">Alertin\'Time</string>
     <string name="search">Search</string>
+    <string name="search_again">Search Again</string>
     <string name="action_settings">Settings</string>
     <string name="rating_suffix">/5</string>
+    <string name="image_description">Image of restaurant</string>
+    <string name="overall_fhr_label">Overall rating:</string>
+    <string name="hygiene_label">Hygiene rating:</string>
+    <string name="structural_label">Structural rating:</string>
+    <string name="management_label">Management rating:</string>
+    <string name="review_label">Review:</string>
+    <string name="error_getting_details">Sorry, an error occurred when getting those details.</string>
 
 </resources>

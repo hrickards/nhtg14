@@ -1,10 +1,13 @@
 package com.harryrickards.nhtg14;
 
 import android.app.Activity;
+import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
+import android.widget.Toast;
 
 public class MainActivity extends Activity
         implements MotionDetector.MotionDetectorInterface,
@@ -32,9 +35,17 @@ public class MainActivity extends Activity
         searchFragment = (SearchFragment) getFragmentManager().findFragmentById(R.id.searchFragment);
         resultsFragment = (ResultsFragment) getFragmentManager().findFragmentById(R.id.resultsFragment);
 
+        // Hide resultsFragment as we have no results yet
+        getFragmentManager().beginTransaction().hide(resultsFragment).commit();
+
         // Set up detectors
         motionDetector = new MotionDetector(this);
         locationDetector = new LocationDetector(this);
+
+        PowerManager mgr = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+        PowerManager.WakeLock wakeLock = mgr.newWakeLock(PowerManager.FULL_WAKE_LOCK, "NHTGWakeLock");
+        wakeLock.acquire();
+        // TODO After x minutes, wakeLock.release()
     }
 
     // Search initialisation
@@ -53,11 +64,19 @@ public class MainActivity extends Activity
     }
 
     protected void getEstablishmentDetails(Location location) {
+        Log.w("nhtg14", "getEstablishmentDetails");
         gettingEstablishmentDetails = true;
         if (searchFragment != null) { searchFragment.onSearchStarted(); }
 
         // Get establishment details
         establishment = new Establishment(location, this);
+    }
+
+    public void onEstablishmentDetailsError() {
+        gettingEstablishmentDetails = false;
+        if (searchFragment != null) { searchFragment.onSearchStopped(); }
+
+        Toast.makeText(this, getString(R.string.error_getting_details), Toast.LENGTH_SHORT).show();
     }
 
     public void onEstablishmentDetailsFound() {
@@ -66,6 +85,11 @@ public class MainActivity extends Activity
 
         // Show results to user
         if (resultsFragment != null) { resultsFragment.showEstablishment(establishment); }
+
+        // Make sure resultsFragment is shown
+        getFragmentManager().beginTransaction().show(resultsFragment).commit();
+        // Change search button to "search again"
+        searchFragment.updateButtonText();
 
         // Vibrate based on rating
         VibratorWrapper.vibrateEstablishment(this, establishment);
@@ -77,22 +101,5 @@ public class MainActivity extends Activity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 }

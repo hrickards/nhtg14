@@ -6,5 +6,5 @@ App that passively detects when you enter a restaurant and vibrates to give you 
 
 Detects location using GPS and movement by accelerometer (if range of gravitational force values over a second exceed a certain threshold)
 
-API up at [nhtg14.harryrickards.com/api](nhtg14.harryrickards.com/api).
+API up at [http://nhtg14.harryrickards.com/api](nhtg14.harryrickards.com/api).
 e.g. `http://nhtg14.harryrickards.com/api/ratings?lat=52&lng=0.15`

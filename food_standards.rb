@@ -66,7 +66,7 @@ class FoodStandards
   def scores
     return "" if @establishments.empty?
     data = @establishments.first["scores"].map do |k, v|
-      [k.underscore.to_sym, v]
+      [k.underscore.to_sym, v.nil? ? 0 : v]
     end
     Hash[data]
   end

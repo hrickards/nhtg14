@@ -41,10 +41,8 @@ class Api < Grape::API
     
       gp = $google_places.search(fs.location[:latitude], fs.location[:longitude], fs.name)
       if gp.nil?
-        photo = Google::Search::Image.new(:query => "\"#{fs.name}\" logo").first
-        photo = Google::Search::Image.new(:query => "#{fs.name} logo").first if photo.nil?
         gp_hash = {
-          photos: [photo.uri]
+          reviews: []
         }
       else
         gp_hash = {
@@ -55,6 +53,12 @@ class Api < Grape::API
       end
 
       puts gp.inspect if $DEBUG_API
+
+      if gp_hash[:photos].nil? or gp_hash[:photos].empty?
+        photo = Google::Search::Image.new(:query => "\"#{fs.name}\" logo").first
+        photo = Google::Search::Image.new(:query => "#{fs.name} logo").first if photo.nil?
+        gp_hash[:photos] = [photo.uri]
+      end
 
       fs_hash.merge gp_hash
     end
